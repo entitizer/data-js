@@ -34,7 +34,7 @@ export const Entity = vogels.define('Entity', {
          */
         updatedAt: Joi.number().integer().positive(),
 
-        redirectId: Joi.string().required()
+        redirectId: Joi.string()
     },
     tableName: prefix + 'Entities'
 });

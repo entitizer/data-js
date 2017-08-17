@@ -1,12 +1,13 @@
 
 import { Observable } from '../../utils';
-import { LocalEntity } from '../../entities';
+import { DataEntity } from '../../entities';
 import { DataConflictError, DataNotFoundError } from 'entitizer.entities';
+import { DataEntityStore } from '../store';
 
-export class MemoryEntityRepository {
+export class MemoryEntityStore implements DataEntityStore {
     private STORE = {};
 
-    create(data: LocalEntity): Observable<LocalEntity> {
+    create(data: DataEntity): Observable<DataEntity> {
         if (this.STORE[data.id]) {
             return Observable.throw(new DataConflictError({ message: `Entity id=${data.id} already exists!` }));
         }
@@ -15,7 +16,13 @@ export class MemoryEntityRepository {
         return Observable.of(data);
     }
 
-    getById(id: string): Observable<LocalEntity> {
+    getById(id: string): Observable<DataEntity> {
         return Observable.of(this.STORE[id]);
+    }
+
+    delete(id: string): Observable<DataEntity> {
+        const entity = this.STORE[id];
+        delete this.STORE[id];
+        return Observable.of(entity);
     }
 }

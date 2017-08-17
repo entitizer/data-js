@@ -1,7 +1,7 @@
 
 const crypto = require('crypto');
 
-export { Observable, Observer } from '@reactivex/rxjs';
+export { Observable, Observer } from 'entitizer.entities';
 
 export function md5(value: string): string {
   return crypto.createHash('md5').update(value, 'utf8').digest('hex').toLowerCase();

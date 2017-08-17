@@ -1,27 +1,27 @@
 
 import { Entity, EntityUniqueName } from 'entitizer.entities';
-import { LocalEntity, LocalEntityUniqueName } from './entities';
+import { DataEntity, DataEntityUniqueName } from './entities';
 
 export interface DataMapper<DE, LE> {
     fromDomain(data: DE): LE
     toDomain(data: LE): DE
 }
 
-export class EntityModelDataMapper implements DataMapper<Entity, LocalEntity> {
-    fromDomain(data: Entity): LocalEntity {
+export class EntityDataMapper implements DataMapper<Entity, DataEntity> {
+    fromDomain(data: Entity): DataEntity {
         return data;
     }
-    toDomain(data: LocalEntity): Entity {
+    toDomain(data: DataEntity): Entity {
         return data;
     }
 }
 
-export class EntityUniqueNameModelDataMapper implements DataMapper<EntityUniqueName, LocalEntityUniqueName> {
+export class EntityUniqueNameDataMapper implements DataMapper<EntityUniqueName, DataEntityUniqueName> {
 
-    fromDomain(data: EntityUniqueName): LocalEntityUniqueName {
+    fromDomain(data: EntityUniqueName): DataEntityUniqueName {
         return data;
     }
-    toDomain(data: LocalEntityUniqueName): EntityUniqueName {
+    toDomain(data: DataEntityUniqueName): EntityUniqueName {
         return data;
     }
 }
