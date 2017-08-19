@@ -8,7 +8,7 @@ export class DataEntityRepository implements EntityRepository {
     constructor(private store: DataEntityStore, private mapper: EntityDataMapper) { }
 
     getByIds(ids: string[], options?: RepAccessOptions): Observable<Entity[]> {
-        throw new Error("Method not implemented.");
+        return this.store.getByIds(ids).map(items => items.map(item => this.mapper.toDomain(item)));
     }
     getById(id: string, options?: RepAccessOptions): Observable<Entity> {
         return this.store.getById(id).map(item => this.mapper.toDomain(item));
@@ -20,6 +20,6 @@ export class DataEntityRepository implements EntityRepository {
         return this.store.create(data).map(item => this.mapper.toDomain(item));
     }
     update(data: RepUpdateData<Entity, string>, options?: RepUpdateOptions): Observable<Entity> {
-        throw new Error("Method not implemented.");
+        return this.store.update(data).map(item => this.mapper.toDomain(item));
     }
 }
