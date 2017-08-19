@@ -19,7 +19,6 @@ export const Entity = vogels.define('Entity', {
         aliases: Joi.array().items(Joi.string().required()),
         extract: Joi.string(),
         wikiTitle: Joi.string(),
-        wikiImage: Joi.string(),
         type: Joi.string(),
         types: Joi.array().items(Joi.string().required()),
         cc2: Joi.string(),
@@ -28,7 +27,7 @@ export const Entity = vogels.define('Entity', {
         /**
          * created at timestamp
          */
-        createdAt: Joi.number().integer().positive(),
+        createdAt: Joi.number().integer().positive().required(),
         /**
          * updated at timestamp
          */

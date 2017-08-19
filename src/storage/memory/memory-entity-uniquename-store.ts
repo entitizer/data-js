@@ -1,11 +1,14 @@
 
-import { Observable } from '../../utils';
+import { Observable, PlainObject } from '../../utils';
 import { DataEntityUniqueName } from '../../entities';
 import { DataConflictError, DataNotFoundError, EntityUniqueNameID } from 'entitizer.entities';
 import { DataEntityUniqueNameStore } from '../store';
+import { NameKeyring, MemoryStorage } from '../keyring';
 
 export class MemoryEntityUniqueNameStore implements DataEntityUniqueNameStore {
     private STORE = {};
+
+    constructor(private keyring: NameKeyring = new NameKeyring(new MemoryStorage())) { }
 
     create(data: DataEntityUniqueName): Observable<DataEntityUniqueName> {
         const id = formatId(data.entityId, data.key);
@@ -14,7 +17,7 @@ export class MemoryEntityUniqueNameStore implements DataEntityUniqueNameStore {
         }
         this.STORE[id] = data;
 
-        return Observable.of(data);
+        return this.keyring.add(data.entityId, [data.key]).map(() => data);
     }
 
     getById(data: EntityUniqueNameID): Observable<DataEntityUniqueName> {
@@ -26,7 +29,17 @@ export class MemoryEntityUniqueNameStore implements DataEntityUniqueNameStore {
         const id = formatId(data.entityId, data.key);
         const entity = this.STORE[id];
         delete this.STORE[id];
-        return Observable.of(entity);
+
+        return this.keyring.delete(data.entityId, [data.key]).map(() => entity);
+    }
+
+    getByEntityId(entityId: string): Observable<DataEntityUniqueName[]> {
+        const ids = Object.keys(this.STORE).filter(key => key.split('-')[0] === entityId);
+        return Observable.from(ids).map(id => this.STORE[id]);
+    }
+
+    getEntityIdsByKeys(keys: string[]): Observable<PlainObject<string[]>> {
+        return this.keyring.getManyValues(keys);
     }
 }
 

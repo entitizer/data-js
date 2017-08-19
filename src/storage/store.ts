@@ -1,5 +1,5 @@
 
-import { Observable } from '../utils';
+import { Observable, PlainObject } from '../utils';
 import { DataEntity, DataEntityUniqueName } from '../entities';
 import { EntityUniqueNameID } from 'entitizer.entities';
 
@@ -14,4 +14,6 @@ export interface DataEntityUniqueNameStore {
     create(data: DataEntityUniqueName): Observable<DataEntityUniqueName>
     delete(id: EntityUniqueNameID): Observable<DataEntityUniqueName>
     getById(id: EntityUniqueNameID): Observable<DataEntityUniqueName>
+    getByEntityId(entityId: string): Observable<DataEntityUniqueName[]>
+    getEntityIdsByKeys(keys: string[]): Observable<PlainObject<string[]>>
 }
