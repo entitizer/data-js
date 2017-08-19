@@ -17,7 +17,7 @@ export class MemoryUniqueNameStore implements DataUniqueNameStore {
         }
         this.STORE[id] = data;
 
-        return this.keyring.add(data.entityId, [data.key]).map(() => data);
+        return this.keyring.addItems(data.entityId, [data.key]).map(() => data);
     }
 
     update(data: RepUpdateData<DataUniqueName, UniqueNameID>): Observable<DataUniqueName> {
@@ -54,7 +54,7 @@ export class MemoryUniqueNameStore implements DataUniqueNameStore {
         const entity = this.STORE[id];
         delete this.STORE[id];
 
-        return this.keyring.delete(data.entityId, [data.key]).map(() => entity);
+        return this.keyring.deleteItems(data.entityId, [data.key]).map(() => entity);
     }
 
     getByEntityId(entityId: string): Observable<DataUniqueName[]> {

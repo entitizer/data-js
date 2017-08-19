@@ -22,14 +22,14 @@ export class NameKeyring {
         return this._storage.get(key);
     }
 
-    add(entityId: string, keys: string[]): Observable<number> {
+    addItems(entityId: string, keys: string[]): Observable<number> {
         keys = uniq(keys);
         return Observable.from(keys)
             .mergeMap(key => this._storage.addItems(key, [entityId]))
             .count();
     }
 
-    delete(entityId: string, keys: string[]): Observable<number> {
+    deleteItems(entityId: string, keys: string[]): Observable<number> {
         keys = uniq(keys);
         return Observable.from(keys)
             .mergeMap(key => this._storage.deleteItems(key, [entityId]))
