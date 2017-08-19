@@ -1,16 +1,16 @@
 
 import { Observable, PlainObject } from '../../utils';
-import { DataEntityUniqueName } from '../../entities';
-import { DataConflictError, DataNotFoundError, EntityUniqueNameID, RepUpdateData } from 'entitizer.entities';
-import { DataEntityUniqueNameStore } from '../store';
+import { DataUniqueName } from '../../entities';
+import { DataConflictError, DataNotFoundError, UniqueNameID, RepUpdateData } from 'entitizer.entities';
+import { DataUniqueNameStore } from '../store';
 import { NameKeyring, MemoryStorage } from '../keyring';
 
-export class MemoryEntityUniqueNameStore implements DataEntityUniqueNameStore {
-    private STORE: PlainObject<DataEntityUniqueName> = {};
+export class MemoryUniqueNameStore implements DataUniqueNameStore {
+    private STORE: PlainObject<DataUniqueName> = {};
 
     constructor(private keyring: NameKeyring = new NameKeyring(new MemoryStorage())) { }
 
-    create(data: DataEntityUniqueName): Observable<DataEntityUniqueName> {
+    create(data: DataUniqueName): Observable<DataUniqueName> {
         const id = formatId(data.entityId, data.key);
         if (this.STORE[id]) {
             return Observable.throw(new DataConflictError({ message: `EntityUniqueName id=${id} already exists!` }));
@@ -20,16 +20,16 @@ export class MemoryEntityUniqueNameStore implements DataEntityUniqueNameStore {
         return this.keyring.add(data.entityId, [data.key]).map(() => data);
     }
 
-    update(data: RepUpdateData<DataEntityUniqueName, EntityUniqueNameID>): Observable<DataEntityUniqueName> {
+    update(data: RepUpdateData<DataUniqueName, UniqueNameID>): Observable<DataUniqueName> {
         throw new Error("Method not implemented.");
     }
 
-    getById(data: EntityUniqueNameID): Observable<DataEntityUniqueName> {
+    getById(data: UniqueNameID): Observable<DataUniqueName> {
         const id = formatId(data.entityId, data.key);
         return Observable.of(this.STORE[id]);
     }
 
-    getByIds(ids: EntityUniqueNameID[]): Observable<DataEntityUniqueName[]> {
+    getByIds(ids: UniqueNameID[]): Observable<DataUniqueName[]> {
         return Observable.from(ids)
             .map(id => formatId(id.entityId, id.key))
             .distinct()
@@ -38,7 +38,7 @@ export class MemoryEntityUniqueNameStore implements DataEntityUniqueNameStore {
             .combineAll();
     }
 
-    delete(data: EntityUniqueNameID): Observable<DataEntityUniqueName> {
+    delete(data: UniqueNameID): Observable<DataUniqueName> {
         const id = formatId(data.entityId, data.key);
         const entity = this.STORE[id];
         delete this.STORE[id];
@@ -46,7 +46,7 @@ export class MemoryEntityUniqueNameStore implements DataEntityUniqueNameStore {
         return this.keyring.delete(data.entityId, [data.key]).map(() => entity);
     }
 
-    getByEntityId(entityId: string): Observable<DataEntityUniqueName[]> {
+    getByEntityId(entityId: string): Observable<DataUniqueName[]> {
         const ids = Object.keys(this.STORE).filter(key => key.split('-')[0] === entityId);
         return Observable.from(ids)
             .map(id => this.STORE[id])

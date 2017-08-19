@@ -1,5 +1,5 @@
 
-export { EntityDataMapper, EntityUniqueNameDataMapper } from './entities';
+export { EntityDataMapper, UniqueNameDataMapper } from './entities';
 export * from './storage';
 export { DataEntityRepository } from './entity-repository';
-export { DataEntityUniqueNameRepository } from './entity-uniquename-repository';
+export { DataUniqueNameRepository } from './uniquename-repository';

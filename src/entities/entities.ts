@@ -1,5 +1,5 @@
 
-import { Entity, EntityUniqueName } from 'entitizer.entities';
+import { Entity, UniqueName } from 'entitizer.entities';
 
 export type DataEntity = Entity;
-export type DataEntityUniqueName = EntityUniqueName;
+export type DataUniqueName = UniqueName;

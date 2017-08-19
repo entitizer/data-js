@@ -1,7 +1,7 @@
 
 import { Observable } from './utils';
 import { DataEntityStore } from './storage';
-import { EntityRepository, EntityUniqueNameRepository, RepAccessOptions, Entity, RepUpdateData, RepUpdateOptions } from 'entitizer.entities';
+import { EntityRepository, RepAccessOptions, Entity, RepUpdateData, RepUpdateOptions } from 'entitizer.entities';
 import { EntityDataMapper } from './entities';
 
 export class DataEntityRepository implements EntityRepository {

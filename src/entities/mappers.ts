@@ -1,6 +1,6 @@
 
-import { Entity, EntityUniqueName } from 'entitizer.entities';
-import { DataEntity, DataEntityUniqueName } from './entities';
+import { Entity, UniqueName } from 'entitizer.entities';
+import { DataEntity, DataUniqueName } from './entities';
 
 export interface DataMapper<DE, LE> {
     fromDomain(data: DE): LE
@@ -16,12 +16,12 @@ export class EntityDataMapper implements DataMapper<Entity, DataEntity> {
     }
 }
 
-export class EntityUniqueNameDataMapper implements DataMapper<EntityUniqueName, DataEntityUniqueName> {
+export class UniqueNameDataMapper implements DataMapper<UniqueName, DataUniqueName> {
 
-    fromDomain(data: EntityUniqueName): DataEntityUniqueName {
+    fromDomain(data: UniqueName): DataUniqueName {
         return data;
     }
-    toDomain(data: DataEntityUniqueName): EntityUniqueName {
+    toDomain(data: DataUniqueName): UniqueName {
         return data;
     }
 }

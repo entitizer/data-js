@@ -2,8 +2,7 @@
 const debug = require('debug')('data:keyring');
 
 import { KeyStorage } from './key-storage';
-import { md5, Observable, PlainObject, uniq } from '../../utils';
-import { EntityUniqueNameHelper } from 'entitizer.entities';
+import { Observable, PlainObject, uniq } from '../../utils';
 
 export class NameKeyring {
     private _storage: KeyStorage<string>;

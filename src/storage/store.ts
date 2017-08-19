@@ -1,7 +1,7 @@
 
 import { Observable, PlainObject } from '../utils';
-import { DataEntity, DataEntityUniqueName } from '../entities';
-import { EntityUniqueNameID, RepUpdateData, EntityID } from 'entitizer.entities';
+import { DataEntity, DataUniqueName } from '../entities';
+import { UniqueNameID, RepUpdateData, EntityID } from 'entitizer.entities';
 
 
 export interface DataEntityStore {
@@ -12,12 +12,12 @@ export interface DataEntityStore {
     getByIds(ids: string[]): Observable<DataEntity[]>
 }
 
-export interface DataEntityUniqueNameStore {
-    create(data: DataEntityUniqueName): Observable<DataEntityUniqueName>
-    update(data: RepUpdateData<DataEntityUniqueName, EntityUniqueNameID>): Observable<DataEntityUniqueName>
-    delete(id: EntityUniqueNameID): Observable<DataEntityUniqueName>
-    getById(id: EntityUniqueNameID): Observable<DataEntityUniqueName>
-    getByIds(ids: EntityUniqueNameID[]): Observable<DataEntityUniqueName[]>
-    getByEntityId(entityId: string): Observable<DataEntityUniqueName[]>
+export interface DataUniqueNameStore {
+    create(data: DataUniqueName): Observable<DataUniqueName>
+    update(data: RepUpdateData<DataUniqueName, UniqueNameID>): Observable<DataUniqueName>
+    delete(id: UniqueNameID): Observable<DataUniqueName>
+    getById(id: UniqueNameID): Observable<DataUniqueName>
+    getByIds(ids: UniqueNameID[]): Observable<DataUniqueName[]>
+    getByEntityId(entityId: string): Observable<DataUniqueName[]>
     getEntityIdsByKeys(keys: string[]): Observable<PlainObject<string[]>>
 }
