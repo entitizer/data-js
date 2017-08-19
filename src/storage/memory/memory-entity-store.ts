@@ -20,7 +20,18 @@ export class MemoryEntityStore implements DataEntityStore {
     }
 
     update(data: RepUpdateData<DataEntity, EntityID>): Observable<DataEntity> {
-        throw new Error("Method not implemented.");
+        return this.getById(data.id).mergeMap(entity => {
+            if (!entity) {
+                return Observable.throw(new DataNotFoundError({ message: `Not found entity with id='${data.id}'` }));
+            }
+            if (data.set) {
+                Object.keys(data.set).forEach(prop => (<any>entity)[prop] = (<any>data.set)[prop]);
+            }
+            if (data.delete && data.delete.length) {
+                data.delete.forEach(prop => delete entity[prop]);
+            }
+            return Observable.of(entity);
+        });
     }
 
     getById(id: string): Observable<DataEntity> {
