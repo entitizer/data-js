@@ -46,7 +46,7 @@ export class MemoryUniqueNameStore implements DataUniqueNameStore {
             .distinct()
             .map(id => this.STORE[id])
             .filter(item => !!item)
-            .combineAll();
+            .toArray();
     }
 
     delete(data: UniqueNameID): Observable<DataUniqueName> {
@@ -59,9 +59,7 @@ export class MemoryUniqueNameStore implements DataUniqueNameStore {
 
     getByEntityId(entityId: string): Observable<DataUniqueName[]> {
         const ids = Object.keys(this.STORE).filter(key => key.split('-')[0] === entityId);
-        return Observable.from(ids)
-            .map(id => this.STORE[id])
-            .combineAll();
+        return Observable.of(ids.map(id => this.STORE[id]));
     }
 
     getEntityIdsByKeys(keys: string[]): Observable<PlainObject<string[]>> {
