@@ -8,9 +8,6 @@ export class MemoryEntityStore implements DataEntityStore {
     private STORE: PlainObject<DataEntity> = {};
 
     create(data: DataEntity): Observable<DataEntity> {
-        if (typeof data.id !== 'string') {
-            return Observable.throw(new DataValidationError({ message: `Invalid data. 'id' is required` }));
-        }
         if (this.STORE[data.id]) {
             return Observable.throw(new DataConflictError({ message: `Entity id=${data.id} already exists!` }));
         }
@@ -46,7 +43,7 @@ export class MemoryEntityStore implements DataEntityStore {
             .distinct()
             .map(id => this.STORE[id])
             .filter(item => !!item)
-            .combineAll();
+            .toArray();
     }
 
     delete(id: string): Observable<DataEntity> {
