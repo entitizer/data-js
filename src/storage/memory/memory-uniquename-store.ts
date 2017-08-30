@@ -1,14 +1,15 @@
 
 import { Observable, PlainObject } from '../../utils';
 import { DataUniqueName } from '../../entities';
-import { DataConflictError, DataNotFoundError, UniqueNameID, RepUpdateData } from 'entitizer.entities';
+import { DataConflictError, DataNotFoundError, UniqueNameID, RepUpdateData, CodeError } from 'entitizer.entities';
 import { DataUniqueNameStore } from '../store';
-import { NameKeyring, MemoryStorage } from '../keyring';
+import { NameKeyring } from '../keyring';
+import { MemoryKeyringStore } from './memory-keyring-store';
 
 export class MemoryUniqueNameStore implements DataUniqueNameStore {
     private STORE: PlainObject<DataUniqueName> = {};
 
-    constructor(private keyring: NameKeyring = new NameKeyring(new MemoryStorage())) { }
+    constructor(private keyring: NameKeyring = new NameKeyring(new MemoryKeyringStore())) { }
 
     create(data: DataUniqueName): Observable<DataUniqueName> {
         const id = formatId(data.entityId, data.key);
@@ -21,18 +22,7 @@ export class MemoryUniqueNameStore implements DataUniqueNameStore {
     }
 
     update(data: RepUpdateData<DataUniqueName, UniqueNameID>): Observable<DataUniqueName> {
-        return this.getById(data.id).mergeMap(entity => {
-            if (!entity) {
-                return Observable.throw(new DataNotFoundError({ message: `Not found entity with id='${data.id}'` }));
-            }
-            if (data.set) {
-                Object.keys(data.set).forEach(prop => (<any>entity)[prop] = (<any>data.set)[prop]);
-            }
-            if (data.delete && data.delete.length) {
-                data.delete.forEach(prop => delete entity[prop]);
-            }
-            return Observable.of(entity);
-        });
+        return Observable.throw(new CodeError({ message: 'an UniqueName cannot be updated' }));
     }
 
     getById(data: UniqueNameID): Observable<DataUniqueName> {

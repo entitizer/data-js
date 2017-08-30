@@ -1,19 +1,16 @@
 
-import { KeyStorage } from './key-storage';
+import { KeyStore } from '../keyring/key-store';
 import { Observable, PlainObject } from '../../utils';
-const NodeCache = require('node-cache');
 
 /**
  * MemoryStorage class. For tests.
  */
-export class MemoryStorage<T> implements KeyStorage<T> {
-    private store: any;
-    constructor() {
-        this.store = new NodeCache();
-    }
+export class MemoryKeyringStore<T> implements KeyStore<T> {
+    private store: PlainObject<T[]> = {};
+    constructor() { }
 
     get(key: string): Observable<T[]> {
-        return Observable.of(this.store.get(key) || []);
+        return Observable.of(this.store[key] || []);
     }
 
     addItems(key: string, items: T[]): Observable<number> {
@@ -28,18 +25,21 @@ export class MemoryStorage<T> implements KeyStorage<T> {
     }
 
     mget(keys: string[]): Observable<PlainObject<T[]>> {
-        return Observable.of(this.store.mget(keys));
+        return Observable.of(keys.reduce<PlainObject<T[]>>((data, key) => {
+            data[key] = this.store[key] || [];
+            return data;
+        }, {}));
     }
 
     set(key: string, items: T[]): Observable<number> {
-        this.store.set(key, items);
+        this.store[key] = items;
         return Observable.of(items.length);
     }
 
     delete(key: string): Observable<number> {
         return this.get(key)
             .map(values => {
-                this.store.del(key);
+                delete this.store[key];
                 return values.length;
             });
     }

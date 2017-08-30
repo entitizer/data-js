@@ -1,4 +1,3 @@
 
-export { KeyStorage } from './key-storage';
+export { KeyStore } from './key-store';
 export { NameKeyring } from './name-keyring';
-export { MemoryStorage } from './memory-storage';

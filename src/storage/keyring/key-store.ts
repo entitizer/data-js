@@ -1,7 +1,7 @@
 
 import { PlainObject, Observable } from '../../utils';
 
-export interface KeyStorage<T> {
+export interface KeyStore<T> {
     /**
      * Set items for a key
      * @return Total key items count

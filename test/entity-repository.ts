@@ -30,10 +30,12 @@ describe('DataEntityRepository', function () {
     describe('#create', function () {
         Object.keys(entities).forEach(name => {
             const data = entities[name];
+            // console.log('data=', data);
             it('should ' + (data.error ? 'fail' : 'success') + ' create ' + name, function (done) {
                 entityRepository.create(data.entity).subscribe(
                     result => {
                         if (data.error) {
+                            // console.log('result=', result);
                             return done(new Error('Should not pass'));
                         }
                         done();

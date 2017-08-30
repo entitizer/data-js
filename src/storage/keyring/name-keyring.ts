@@ -1,38 +1,38 @@
 
 const debug = require('debug')('data:keyring');
 
-import { KeyStorage } from './key-storage';
+import { KeyStore } from './key-store';
 import { Observable, PlainObject, uniq } from '../../utils';
 
 export class NameKeyring {
-    private _storage: KeyStorage<string>;
+    private _store: KeyStore<string>;
 
-    constructor(storage: KeyStorage<string>) {
-        if (!storage) {
-            throw new Error('`storage` param is required');
+    constructor(store: KeyStore<string>) {
+        if (!store) {
+            throw new Error('`store` param is required');
         }
-        this._storage = storage;
+        this._store = store;
     }
 
     getManyValues(keys: string[]): Observable<PlainObject<string[]>> {
-        return this._storage.mget(keys);
+        return this._store.mget(keys);
     }
 
     getValues(key: string): Observable<string[]> {
-        return this._storage.get(key);
+        return this._store.get(key);
     }
 
     addItems(entityId: string, keys: string[]): Observable<number> {
         keys = uniq(keys);
         return Observable.from(keys)
-            .mergeMap(key => this._storage.addItems(key, [entityId]))
+            .mergeMap(key => this._store.addItems(key, [entityId]))
             .count();
     }
 
     deleteItems(entityId: string, keys: string[]): Observable<number> {
         keys = uniq(keys);
         return Observable.from(keys)
-            .mergeMap(key => this._storage.deleteItems(key, [entityId]))
+            .mergeMap(key => this._store.deleteItems(key, [entityId]))
             .filter(count => count > 0)
             .count();
     }

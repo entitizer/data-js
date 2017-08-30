@@ -8,6 +8,9 @@ export class MemoryEntityStore implements DataEntityStore {
     private STORE: PlainObject<DataEntity> = {};
 
     create(data: DataEntity): Observable<DataEntity> {
+        if (!data.id) {
+            return Observable.throw(new DataValidationError({ message: `Entity id is required!` }));
+        }
         if (this.STORE[data.id]) {
             return Observable.throw(new DataConflictError({ message: `Entity id=${data.id} already exists!` }));
         }
