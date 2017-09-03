@@ -10,7 +10,8 @@
         "sourceMap": false,
         "moduleResolution": "node",
         "declaration": true,
-        "declarationDir": "types"
+        "declarationDir": "types",
+        "noUnusedLocals": true
     },
     "formatCodeOptions": {
         "indentSize": 2,

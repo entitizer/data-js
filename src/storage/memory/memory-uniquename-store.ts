@@ -1,7 +1,7 @@
 
 import { Observable, PlainObject } from '../../utils';
 import { DataUniqueName } from '../../entities';
-import { DataConflictError, DataNotFoundError, UniqueNameID, RepUpdateData, CodeError } from 'entitizer.entities';
+import { DataConflictError, UniqueNameID, RepUpdateData, CodeError } from 'entitizer.entities';
 import { DataUniqueNameStore } from '../store';
 import { NameKeyring } from '../keyring';
 import { MemoryKeyringStore } from './memory-keyring-store';

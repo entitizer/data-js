@@ -1,5 +1,5 @@
 
-const debug = require('debug')('data:keyring');
+// const debug = require('debug')('data:keyring');
 
 import { KeyStore } from './key-store';
 import { Observable, PlainObject, uniq } from '../../utils';

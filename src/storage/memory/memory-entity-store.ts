@@ -27,8 +27,8 @@ export class MemoryEntityStore implements DataEntityStore {
             if (data.set) {
                 Object.keys(data.set).forEach(prop => (<any>entity)[prop] = (<any>data.set)[prop]);
             }
-            if (data.delete && data.delete.length) {
-                data.delete.forEach(prop => delete entity[prop]);
+            if (data.remove && data.remove.length) {
+                data.remove.forEach(prop => delete entity[prop]);
             }
             return Observable.of(entity);
         });
