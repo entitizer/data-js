@@ -4,7 +4,7 @@ import { DataValidationError } from 'entitizer.entities';
 import * as assert from 'assert';
 import { describe, it } from 'mocha';
 
-describe('DataEntityRepository', function () {
+describe('memory DataEntityRepository', function () {
     const entityRepository = new DataEntityRepository(new MemoryEntityStore(), new EntityDataMapper());
     const entities = {
         noLang: {
