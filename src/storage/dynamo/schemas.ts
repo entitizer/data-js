@@ -43,12 +43,12 @@ export const EntitySchema = vogels.define('Entity', {
 });
 
 export const UniqueNameSchema = vogels.define('UniqueName', {
-    hashKey: 'entitiId',
+    hashKey: 'entityId',
     rangeKey: 'key',
     timestamps: false,
 
     schema: {
-        entitiId: Joi.string().required(),
+        entityId: Joi.string().required(),
         key: Joi.string().required(),
         lang: Joi.string().required(),
         name: Joi.string().required(),

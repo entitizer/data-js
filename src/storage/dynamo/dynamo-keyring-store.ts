@@ -2,7 +2,6 @@
 import { KeyStore } from '../keyring/key-store';
 import { Observable, PlainObject } from '../../utils';
 import { DataKeyring } from '../../entities';
-import { CodeError, EntityID, RepUpdateData } from 'entitizer.entities';
 import { DynamoModel } from './dynamo-model';
 import { KeyringModel } from './models';
 
@@ -13,7 +12,7 @@ export class DynamoKeyringStore implements KeyStore<string> {
     }
 
     get(key: string): Observable<string[]> {
-        return Observable.fromPromise(this.model.get(key)).map(result => result && result.ids);
+        return Observable.fromPromise(this.model.get(key)).map(result => result && result.ids || []);
     }
 
     addItems(key: string, items: string[]): Observable<number> {
@@ -29,14 +28,17 @@ export class DynamoKeyringStore implements KeyStore<string> {
 
     mget(keys: string[]): Observable<PlainObject<string[]>> {
         return Observable.fromPromise(this.model.getItems(keys))
-            .map(items => items.reduce<PlainObject<string[]>>((r, item) => {
+            .map(items => (items || []).reduce<PlainObject<string[]>>((r, item) => {
                 r[item.key] = item.ids;
                 return r;
             }, {}));
     }
 
     set(key: string, items: string[]): Observable<number> {
-        return Observable.fromPromise(this.model.put({ key: key, ids: items })).mapTo(items.length);
+        if (items && items.length) {
+            return Observable.fromPromise(this.model.put({ key: key, ids: items })).mapTo(items.length);
+        }
+        return this.delete(key);
     }
 
     delete(key: string): Observable<number> {

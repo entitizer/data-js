@@ -2,13 +2,14 @@
 const debug = require('debug')('data');
 import { RepUpdateData } from 'entitizer.entities';
 import { AnyPlainObject, StringPlainObject } from '../../utils';
-const vogels = require('vogels');
+const AWS = require('vogels').AWS;
 
 export type DynamoModelConfig = {
     tablePrefix?: string
     accessKeyId?: string
     secretAccessKey?: string
     region?: string
+    endpoint?: string
     [index: string]: string
 }
 
@@ -16,20 +17,23 @@ export class DynamoModel<T> {
     constructor(private model: any) { }
 
     config(data: DynamoModelConfig) {
-        const config = ['accessKeyId', 'secretAccessKey', 'region', 'tableName'].reduce<any>((r, key) => {
+        let hasConfig = false;
+        const config = ['accessKeyId', 'secretAccessKey', 'region', 'endpoint'].reduce<any>((r, key) => {
             if (data[key]) {
                 r[key] = data[key];
+                hasConfig = true;
             }
             return r;
         }, {});
-        this.model.config(config);
+        debug('set config', config);
+        this.model.config({ tableName: data.tableName, dynamodb: hasConfig ? new AWS.DynamoDB(config) : undefined });
     }
 
     create(data: T): Promise<T> {
         return new Promise((resolve, reject) => {
             this.model.create(data, { overwrite: false }, (error: Error, result: any) => {
                 if (error) { return reject(error) }
-                resolve(result && result.get());
+                resolve(result && result.toJSON());
             });
         });
     }
@@ -38,7 +42,7 @@ export class DynamoModel<T> {
         return new Promise((resolve, reject) => {
             this.model.create(data, { overwrite: true }, (error: Error, result: any) => {
                 if (error) { return reject(error) }
-                resolve(result && result.get());
+                resolve(result && result.toJSON());
             });
         });
     }
@@ -62,7 +66,7 @@ export class DynamoModel<T> {
         return new Promise((resolve, reject) => {
             this.model.update(id, params, (error: Error, result: any) => {
                 if (error) { return reject(error) }
-                resolve(result && result.get());
+                resolve(result && result.toJSON());
             });
         });
     }
@@ -71,7 +75,7 @@ export class DynamoModel<T> {
         return new Promise((resolve, reject) => {
             this.model.destroy(id, { ReturnValues: true }, (error: Error, result: any) => {
                 if (error) { return reject(error) }
-                resolve(result && result.get());
+                resolve(result && result.toJSON());
             });
         });
     }
@@ -80,7 +84,7 @@ export class DynamoModel<T> {
         return new Promise((resolve, reject) => {
             this.model.get(id, options, (error: Error, result: any) => {
                 if (error) { return reject(error) }
-                resolve(result && result.get());
+                resolve(result && result.toJSON());
             });
         });
     }
@@ -89,7 +93,8 @@ export class DynamoModel<T> {
         return new Promise((resolve, reject) => {
             this.model.getItems(ids, options, (error: Error, result: any) => {
                 if (error) { return reject(error) }
-                resolve(result && result.get());
+                debug('getting items', ids, result);
+                resolve(result || []);
             });
         });
     }

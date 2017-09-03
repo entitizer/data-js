@@ -25,15 +25,13 @@ export class NameKeyring {
     addItems(entityId: string, keys: string[]): Observable<number> {
         keys = uniq(keys);
         return Observable.from(keys)
-            .mergeMap(key => this._store.addItems(key, [entityId]))
-            .count();
+            .mergeMap(key => this._store.addItems(key, [entityId]));
     }
 
     deleteItems(entityId: string, keys: string[]): Observable<number> {
         keys = uniq(keys);
         return Observable.from(keys)
             .mergeMap(key => this._store.deleteItems(key, [entityId]))
-            .filter(count => count > 0)
-            .count();
+            .filter(count => count > 0);
     }
 }
