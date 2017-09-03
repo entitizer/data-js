@@ -6,6 +6,7 @@ const prefix = process.env.ENTITIZER_DATA_TABLE_PTEFIX || 'entitizer_v0';
 
 export const EntityTableName = 'entities';
 export const UniqueNameTableName = 'uniquenames';
+export const KeyringTableName = 'keyrings';
 
 export const EntitySchema = vogels.define('Entity', {
     hashKey: 'id',
@@ -58,4 +59,15 @@ export const UniqueNameSchema = vogels.define('UniqueName', {
         createdAt: Joi.number().integer().positive().required()
     },
     tableName: prefix + '_' + UniqueNameTableName
+});
+
+export const KeyringSchema = vogels.define('Keyring', {
+    hashKey: 'key',
+    timestamps: false,
+
+    schema: {
+        key: Joi.string().required(),
+        ids: vogels.types.stringSet().required()
+    },
+    tableName: prefix + '_' + KeyringTableName
 });

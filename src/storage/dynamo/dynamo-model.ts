@@ -2,6 +2,7 @@
 const debug = require('debug')('data');
 import { RepUpdateData } from 'entitizer.entities';
 import { AnyPlainObject, StringPlainObject } from '../../utils';
+const vogels = require('vogels');
 
 export type DynamoModelConfig = {
     tablePrefix?: string
@@ -33,8 +34,17 @@ export class DynamoModel<T> {
         });
     }
 
+    put(data: T): Promise<T> {
+        return new Promise((resolve, reject) => {
+            this.model.create(data, { overwrite: true }, (error: Error, result: any) => {
+                if (error) { return reject(error) }
+                resolve(result && result.get());
+            });
+        });
+    }
+
     update(data: RepUpdateData<T, any>): Promise<T> {
-        const id = typeof data.id === 'string' || typeof data.id === 'number' ? { id: data.id } : data.id;
+        const id = data.id;//typeof data.id === 'string' || typeof data.id === 'number' ? { id: data.id } : data.id;
         const expression = new UpdateExpression();
         if (data.set) {
             for (let prop in data.set) {
