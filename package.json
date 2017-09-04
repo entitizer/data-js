@@ -39,6 +39,7 @@
   "devDependencies": {
     "@types/joi": "^10.4.1",
     "@types/node": "^7.x.x",
+    "@types/redis": "^2.6.0",
     "debug": "^2.6.8",
     "mocha": "^3.2.0",
     "node-cache": "^4.1.1",

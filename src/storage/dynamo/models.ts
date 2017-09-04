@@ -13,6 +13,7 @@ export function dynamoConfig(config: DynamoModelConfig) {
     UniqueNameModel.config(config);
     KeyringModel.config(config);
 }
+
 export function createTables(): Promise<void> {
     return new Promise((resolve, reject) => {
         vogels.createTables({

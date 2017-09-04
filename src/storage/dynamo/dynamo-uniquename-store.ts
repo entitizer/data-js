@@ -6,15 +6,13 @@ import { UniqueNameID, RepUpdateData } from 'entitizer.entities';
 import { DataUniqueNameStore } from '../store';
 import { DynamoModel } from './dynamo-model';
 import { UniqueNameModel } from './models';
-import { DynamoKeyringStore } from './dynamo-keyring-store';
+import { KeyringStore } from '../keyring';
 
 export class DynamoUniqueNameStore implements DataUniqueNameStore {
     private model: DynamoModel<DataUniqueName>;
-    private keyring: DynamoKeyringStore;
 
-    constructor() {
+    constructor(private keyring: KeyringStore<string>) {
         this.model = UniqueNameModel;
-        this.keyring = new DynamoKeyringStore();
     }
 
     create(data: DataUniqueName): Observable<DataUniqueName> {

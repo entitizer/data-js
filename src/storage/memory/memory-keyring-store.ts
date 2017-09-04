@@ -1,11 +1,11 @@
 
-import { KeyStore } from '../keyring/key-store';
+import { KeyringStore } from '../keyring/keyring-store';
 import { Observable, PlainObject } from '../../utils';
 
 /**
  * MemoryStorage class. For tests.
  */
-export class MemoryKeyringStore<T> implements KeyStore<T> {
+export class MemoryKeyringStore<T> implements KeyringStore<T> {
     private store: PlainObject<T[]> = {};
     constructor() { }
 

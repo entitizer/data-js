@@ -108,8 +108,11 @@ export class DynamoModel<T> {
     }
 
     getItems(ids: any[], options?: { AttributesToGet: string[] }): Promise<T[]> {
-        if (~[null, undefined].indexOf(ids) || !ids.length) {
+        if (~[null, undefined].indexOf(ids)) {
             return Promise.reject(new DataValidationError({ message: `argument 'ids' is invalid` }));
+        }
+        if (ids.length === 0) {
+            return Promise.resolve([]);
         }
         return new Promise((resolve, reject) => {
             this.model.getItems(ids, options, (error: Error, result: any) => {

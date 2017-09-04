@@ -1,13 +1,13 @@
 
 // const debug = require('debug')('data:keyring');
 
-import { KeyStore } from './key-store';
+import { KeyringStore } from './keyring-store';
 import { Observable, PlainObject, uniq } from '../../utils';
 
 export class NameKeyring {
-    private _store: KeyStore<string>;
+    private _store: KeyringStore<string>;
 
-    constructor(store: KeyStore<string>) {
+    constructor(store: KeyringStore<string>) {
         if (!store) {
             throw new Error('`store` param is required');
         }

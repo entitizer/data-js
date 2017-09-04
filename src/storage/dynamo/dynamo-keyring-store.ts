@@ -1,11 +1,11 @@
 
-import { KeyStore } from '../keyring/key-store';
+import { KeyringStore } from '../keyring/keyring-store';
 import { Observable, PlainObject } from '../../utils';
 import { DataKeyring } from '../../entities';
 import { DynamoModel } from './dynamo-model';
 import { KeyringModel } from './models';
 
-export class DynamoKeyringStore implements KeyStore<string> {
+export class DynamoKeyringStore implements KeyringStore<string> {
     private model: DynamoModel<DataKeyring>;
     constructor() {
         this.model = KeyringModel;
