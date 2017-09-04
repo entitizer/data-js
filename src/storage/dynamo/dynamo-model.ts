@@ -1,6 +1,6 @@
 
 const debug = require('debug')('data');
-import { RepUpdateData } from 'entitizer.entities';
+import { RepUpdateData, DataValidationError } from 'entitizer.entities';
 import { AnyPlainObject, StringPlainObject } from '../../utils';
 const AWS = require('vogels').AWS;
 
@@ -11,6 +11,21 @@ export type DynamoModelConfig = {
     region?: string
     endpoint?: string
     [index: string]: string
+}
+
+export interface DynamoQueryData {
+    key: string | number
+    index?: string
+    select?: 'COUNT' | 'ALL_PROJECTED_ATTRIBUTES'
+    attributes?: string[]
+    sort?: 'ASC' | 'DESC'
+    limit?: number
+    rangeKey?: {
+        name: string
+        operation?: 'gte' | 'gt' | 'lt' | 'lte' | 'equals' | 'beginsWith' | 'between'
+        value: string | number
+    }
+    startKey?: object | string | number
 }
 
 export class DynamoModel<T> {
@@ -81,6 +96,9 @@ export class DynamoModel<T> {
     }
 
     get(id: any, options?: { AttributesToGet: string[] }): Promise<T> {
+        if (~[null, undefined, ''].indexOf(id)) {
+            return Promise.reject(new DataValidationError({ message: `argument 'id' is invalid` }));
+        }
         return new Promise((resolve, reject) => {
             this.model.get(id, options, (error: Error, result: any) => {
                 if (error) { return reject(error) }
@@ -90,11 +108,70 @@ export class DynamoModel<T> {
     }
 
     getItems(ids: any[], options?: { AttributesToGet: string[] }): Promise<T[]> {
+        if (~[null, undefined].indexOf(ids) || !ids.length) {
+            return Promise.reject(new DataValidationError({ message: `argument 'ids' is invalid` }));
+        }
         return new Promise((resolve, reject) => {
             this.model.getItems(ids, options, (error: Error, result: any) => {
                 if (error) { return reject(error) }
-                debug('getting items', ids, result);
-                resolve(result || []);
+                result = result && (<any[]>result).map(item => item.toJSON());
+                debug('got items', ids, result);
+                resolve(result);
+            });
+        });
+    }
+
+    query(data: DynamoQueryData): Promise<T[] | number> {
+        const query = this.model.query(data.key);
+
+        if (data.startKey) {
+            query.startKey(data.startKey);
+        }
+        if (data.index) {
+            query.usingIndex(data.index);
+        }
+        if (data.limit) {
+            query.limit(data.limit);
+        }
+        if (data.attributes) {
+            query.attributes(data.attributes);
+        }
+        if (data.sort) {
+            if (data.sort === 'ASC') {
+                query.ascending();
+            } else if (data.sort === 'DESC') {
+                query.descending();
+            }
+        }
+        if (data.rangeKey) {
+            query.where(data.rangeKey.name)[data.rangeKey.operation || 'equals'](data.rangeKey.value);
+        }
+        if (data.select) {
+            query.select(data.select);
+        }
+
+        // if (data.filterExpression) {
+        //     query.filterExpression(data.filterExpression);
+        //     if (data.expressionAttributeNames) {
+        //         query.expressionAttributeNames(data.expressionAttributeNames);
+        //     }
+        //     if (data.expressionAttributeValues) {
+        //         query.expressionAttributeValues(data.expressionAttributeValues);
+        //     }
+        // }
+        // if (data.projectionExpression) {
+        //     query.projectionExpression(data.projectionExpression);
+        // }
+
+        return new Promise(function (resolve, reject) {
+            query.exec(function (error: Error, result: any) {
+                if (error) {
+                    return reject(error);
+                }
+                // debug('query result', result);
+                result = data.select === 'COUNT' ? <number>result.Count : (<any[]>result.Items).map(item => item.toJSON());
+
+                resolve(result);
             });
         });
     }

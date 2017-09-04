@@ -19,7 +19,7 @@ export class DynamoUniqueNameStore implements DataUniqueNameStore {
 
     create(data: DataUniqueName): Observable<DataUniqueName> {
         debug('creating uniquename', data);
-        return Observable.fromPromise(this.model.create(data)).mergeMap(un => un && this.keyring.addItems(un.entityId, [un.key]).map(() => un));
+        return Observable.fromPromise(this.model.create(data)).mergeMap(un => un && this.keyring.addItems(un.key, [un.entityId]).map(() => un));
     }
 
     update(data: RepUpdateData<DataUniqueName, UniqueNameID>): Observable<DataUniqueName> {
@@ -35,11 +35,11 @@ export class DynamoUniqueNameStore implements DataUniqueNameStore {
     }
 
     delete(id: UniqueNameID): Observable<DataUniqueName> {
-        return Observable.fromPromise(this.model.delete(id)).mergeMap(un => un && this.keyring.deleteItems(un.entityId, [un.key]).map(() => un));
+        return Observable.fromPromise(this.model.delete(id)).mergeMap(un => un && this.keyring.deleteItems(un.key, [un.entityId]).map(() => un));
     }
 
     getByEntityId(entityId: string): Observable<DataUniqueName[]> {
-        throw new Error("Method not implemented.");
+        return Observable.fromPromise(<Promise<DataUniqueName[]>>this.model.query({ key: entityId, limit: 100 }));
     }
 
     getEntityIdsByKeys(keys: string[]): Observable<PlainObject<string[]>> {
