@@ -20,12 +20,12 @@ export class DynamoEntityStore implements DataEntityStore {
         return Observable.fromPromise(this.model.update(data));
     }
 
-    getById(id: string): Observable<DataEntity> {
-        return Observable.fromPromise(this.model.get(id));
+    getById(id: string, options?: { AttributesToGet: string[] }): Observable<DataEntity> {
+        return Observable.fromPromise(this.model.get(id, options));
     }
 
-    getByIds(ids: string[]): Observable<DataEntity[]> {
-        return Observable.fromPromise(this.model.getItems(ids));
+    getByIds(ids: string[], options?: { AttributesToGet: string[] }): Observable<DataEntity[]> {
+        return Observable.fromPromise(this.model.getItems(ids, options));
     }
 
     delete(id: string): Observable<DataEntity> {

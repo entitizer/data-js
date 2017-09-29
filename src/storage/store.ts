@@ -8,8 +8,8 @@ export interface DataEntityStore {
     create(data: DataEntity): Observable<DataEntity>
     update(data: RepUpdateData<DataEntity, EntityID>): Observable<DataEntity>
     delete(id: string): Observable<DataEntity>
-    getById(id: string): Observable<DataEntity>
-    getByIds(ids: string[]): Observable<DataEntity[]>
+    getById(id: string, options?: { AttributesToGet: string[] }): Observable<DataEntity>
+    getByIds(ids: string[], options?: { AttributesToGet: string[] }): Observable<DataEntity[]>
 }
 
 export interface DataUniqueNameStore {
