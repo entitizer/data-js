@@ -19,9 +19,9 @@ describe('memory DataEntityRepository', function () {
         },
         Q41: {
             entity: {
-                id: 'ENQ41',
+                id: 'ROQ41',
                 wikiId: 'Q41',
-                lang: 'en',
+                lang: 'ro',
                 name: 'Greece'
             }
         }

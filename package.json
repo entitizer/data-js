@@ -1,6 +1,6 @@
 {
   "name": "entitizer.data",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Entitizer data module",
   "main": "./lib/index.js",
   "types": "./types/index.d.ts",
@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "@reactivex/rxjs": "^5.4.3",
+    "entitizer.entities": "^0.1.0",
     "joi": "^10.6.0",
     "vogels": "^2.2.0"
   }
